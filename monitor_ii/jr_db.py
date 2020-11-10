@@ -1,19 +1,21 @@
 import sqlite3
 
-class CPU():
-    databaseName = "untitled"
 
-    def CreateConnection(self):
-        connection = sqlite3.connect("db_cpuMonitor")
-        csr = connection.cursor()
-        csr.execute("create table cpuCheck([id] integer primary key AUTOINCREMENT, [temperature] decimal,[created_at] DATETIME")
-        connection.commit()
-        connection.close()
+def CreateTable():
+    command = "create table  CPU (id integer primary key AUTOINCREMENT , load decimal, temperature decimal, created_at DateTime)"
+    connection = sqlite3.connect("CPU.db")
+    csr = connection.cursor()
+    csr.execute(command)
+    connection.commit()
+    connection.close()
 
-    def InsertCPU(self,temperature, date):
-        connection = sqlite3.connect("db_cpuMonitor")
-        csr = connection.cursor()
-        command = "insert into cpuCheck value (" + str(temperature) + "," + str(date) + ")"
-        csr.execute(command)
-        connection.commit()
-        connection.close()
+
+def AppendData(newLoad, newTemperature, newTime):
+    command = "insert into CPU(load,temperature, created_at) value(" + str(newLoad) + "," + str(newTemperature) + "," + str(newTime) + ")"
+    #connection = sqlite3.connect("CPUDatalog")
+    #csr = connection.cursor()
+    #csr.execute(command)
+    #connection.commit()
+   # connection.close()
+
+    print(str(round(newLoad,2)) + " | " + str(round(newTemperature,2)) + " |" + str(newTime))

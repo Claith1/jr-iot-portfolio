@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 # import the Model classes for CPU and Storage
 from db import CPU, Storage, Base
 
+
 # import the methods that will be used from the mypi file
 from mypi import \
     get_serial, get_mac, get_host_name, \
