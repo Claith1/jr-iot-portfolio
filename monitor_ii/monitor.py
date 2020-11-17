@@ -7,7 +7,7 @@ def main(_delay):
     counter = 0
     while True:
         if counter == 0:
-            print("LOAD | TEMP | TIME")
+            print("CPU LOAD | TEMP | TIME")
         counter += 1
         jr_db.AppendData(GetLoad(),GetTemp(),datetime.now())
         sleep(_delay)
