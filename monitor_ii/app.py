@@ -1,87 +1,54 @@
-from flask import Flask, render_template, jsonify
-from db import CPU, Storage, Base
-from flask_cors import CORS
+from flask import Flask, render_template
+from monitor import GetLoad
 
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import sessionmaker
-
-db_filename = './data/monitor_data.db'
 app = Flask(__name__)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-
-engine = create_engine(f'sqlite:///{db_filename}')
-session = sessionmaker()
-session.configure(bind=engine)
-Base.metadata.create_all(engine)
-
-
-def set_status(status):
-    if status is True:
-        return 'Running', 'fa fa-smile', 'bg-success'
-    elif status is False:
-        return 'Stopped', 'fas fa-angry', 'bg-danger'
-    else:
-        return 'Unknown', 'fas fa-sad-tear', 'bg-dark'
 
 
 @app.route('/')
 def index():
-    # check to see if cpu-monitor is running
-    monitor_cpu = True
-    # check to see if storage monitor is running
-    monitor_storage = False
-    # check to see if environmental monitor is running
-    monitor_enviro = None
+    return render_template('index.html')
 
-    # set up component dictionaries and set values
-    cpu = {}
-    cpu['name'], cpu['icon'] = 'CPU', 'fa-microchip',
-    cpu['message'], cpu['emoticon'], cpu['class'] = set_status(monitor_cpu)
+@app.route('/api/device-load')
+def DeviceLoad():
+    return ("{cpu : \"" + str(GetLoad()) + "\"}")
 
-    storage = {}
-    storage['name'], storage['icon'] = 'Storage', 'fa-hdd'
-    storage['message'], storage['emoticon'], storage['class'] = set_status(
-        monitor_storage)
-
-    enviro = {}
-    enviro['name'], enviro['icon'] = 'Enviro', 'fa-leaf'
-    enviro['message'], enviro['emoticon'], enviro['class'] = set_status(
-        monitor_enviro)
-
-    statuses = [cpu, storage, enviro]
-    return render_template('index.html', statuses=statuses)
 
 
 @app.route('/about')
-def demo_template():
+def about():
     return render_template('about.html')
 
 
-@app.route('/api/cpu-load/<qty>')
-def cpu_load(qty=1):
-    try:
-        qty = abs(int(qty))
-    except:
-        qty = 1
-    active_session = session()
-    cpu = active_session.query(CPU).order_by(CPU.created_at.desc()).first()
-    data = {cpu.id:{
-        'created_at':cpu.created_at,
-        'host_mac':cpu.host_mac,
-        'cpu_temp':cpu.cpu_temp,
-        'gpu_temp':cpu.gpu_temp,
-        'host_name':cpu.host_name,
-        'id':cpu.id,
-        'load':cpu.load,
-        'serial':cpu.serial,
-    }}
-    return jsonify(data)
+@app.route('/cpu')
+def chart_cpu():
+    return render_template('chart-cpu.html')
 
 
-@app.route('/api/cpu-load')
-def cpu_load_latest():
-    return cpu_load(1)
 
+
+
+@app.route("/api/environment")
+def get_api_enviroment():
+    return {"error": "Route no implemented",
+            "temperature": None,
+            "pressure": None,
+            "humidity": None}
+
+
+@app.route("/api/temperature")
+def get_api_temperature():
+    return {"error": "Route no implemented",
+            "temperature": None}
+
+@app.route("/api/pressure")
+def get_api_pressure():
+    return {"error": "Route no implemented",
+            "pressure": None}
+
+@app.route("/api/humidity")
+def get_api_humidity():
+    return {"error": "Route no implemented",
+            "humidity": None}
 
 if __name__ == '__main__':
-    app.run()
+    app.run("127.0.0.1",5555)

@@ -10,7 +10,10 @@ def index():
 
 @app.route('/api/device-load')
 def DeviceLoad():
-    return render_template()
+    return
+
+
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -22,4 +25,4 @@ def chart_cpu():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run("127.0.0.1",5555)
