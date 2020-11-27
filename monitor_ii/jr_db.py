@@ -1,19 +1,19 @@
 import sqlite3
 def CreateTable():
-    command = "create table  CPU (id integer primary key AUTOINCREMENT , load decimal, temperature decimal, created_at DateTime)"
+
+    command = "create table  CPU (id integer primary key AUTOINCREMENT, load decimal, temperature decimal, decimal humidity, decimal pressure  created_at DateTime)"
     connection = sqlite3.connect("CPU.db")
     csr = connection.cursor()
     csr.execute(command)
     connection.commit()
     connection.close()
 
-def Function(parameter):
-    print(parameter)
+
 def AppendData(newLoad, newTemperature, newTime):
     try:
         command = "insert into CPU(load,temperature, created_at) values" \
                   " (" + str(round(newLoad,2)) + "," + str(round(newTemperature,2)) + ",'" + str(newTime) + "')"
-        print(command)
+        #print(command)
         connection = sqlite3.connect("CPU.db")
         csr = connection.cursor()
         csr.execute(command)
