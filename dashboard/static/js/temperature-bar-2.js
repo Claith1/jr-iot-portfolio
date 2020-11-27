@@ -1,14 +1,16 @@
-var chartCanvas1 = document.getElementById('Pressure-Bar')
+
+
+var chartCanvas1 = document.getElementById('Temperature-Bar')
         var barData = {
             datasets: [{
                 label: 'Current',
-                data: [22.4],
+                data: [200],
                 borderWidth: 1,
                 backgroundColor: [
-                    'rgba(67, 37, 52, 0.4)',
+                    'rgba(24, 58, 55, 0.4)',
                 ],
                 borderColor: [
-                    'rgba(67, 37, 52, 1)',
+                    'rgba(24, 58, 55, 1)',
                 ],
             }],
         }

@@ -1,32 +1,23 @@
-let xhr = new XMLHttpRequest();
-xhr.open('Get','http://127.0.0.1:5555/api/environment/')
+let url = 'http://192.168.1.14:5000/api/device-load'
+let method = 'GET'
+let typeOfResponse = 'json'
+
+let xhr = new XMLHttpRequest()
+xhr.open(method, url)
+xhr.responseType = typeOfResponse
 xhr.send()
-xhr.onload = function() {
-    if(xhr.status != 200){
-        alert('Error ${xhr.status}: ${xhr.statusText}');
-    }else{
-        alert('Done, got ${xhr.response.length} bytes');
-    }
-}
-
-xhr.onprogress = function(event){
-    if (event.lengthComputable){
-        alert('Received ${event.loaded} of ${event.total} bytes')
-    } else {
-        alert('Recieved ${event.loaded}')
-    }
-}
-
-xhr.onerror = function () {
-    alert("Request failed");
-
-}
-var chartCanvas1 = document.getElementById('Device-Load_Pie')
+xhr.onload = function () {
+    let responseObj = xhr.response;
+    console.log(responseObj)
+    for (let responseNumber in responseObj) {
+        let response = responseObj[responseNumber]
+        var cpuLoad = response
+        var chartCanvas1 = document.getElementById('Device-Load_Pie')
         var barData = {
             labels: ['Cpu Usage','Idle'],
             datasets: [{
                 label: 'Current',
-                data: [36,64],
+                data: [cpuLoad,100-cpuLoad],
                 borderWidth: 1,
                 borderAlign: 'inner',
                 backgroundColor: [
@@ -47,3 +38,11 @@ var chartCanvas1 = document.getElementById('Device-Load_Pie')
             data: barData,
             options: barOptions,
         })
+    }
+
+};
+xhr.onerror = function () {
+    alert("Request failed");
+
+}
+

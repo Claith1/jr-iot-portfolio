@@ -6,12 +6,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('/test/index.html')
+
 
 @app.route('/api/device-load')
 def DeviceLoad():
     return
-
 
 
 @app.route('/about')
@@ -25,4 +25,4 @@ def chart_cpu():
 
 
 if __name__ == '__main__':
-    app.run("127.0.0.1",5555)
+    app.run("192.168.1.14",5555)
