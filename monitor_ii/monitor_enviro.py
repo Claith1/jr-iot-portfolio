@@ -2,9 +2,9 @@ from datetime import datetime
 from time import sleep
 
 # import the ORM items
-from sqlalchemy import create_engine
+import sqlalchemy as db
 from sqlalchemy.orm import sessionmaker
-
+import sqlite3 as sql
 # import the Model classes for CPU and Storage
 from db import EnvironmentTPH, Storage, Base
 
@@ -15,7 +15,6 @@ from mypi import \
     get_cpu_temp, get_gpu_temp, get_maximum_cpu_load
 
 isPi = False
-
 if isPi:
     from sense_hat import SenseHat
 
@@ -31,7 +30,7 @@ def headings():
 
 db_filename = './data/monitor_data.db'
 def main(_delay):
-    engine = create_engine(f'sqlite:///{db_filename}')
+    engine = db.create_engine(f'sqlite:///{db_filename}')
     session = sessionmaker(bind=engine)()
     Base.metadata.create_all(engine)
     counter = 0
@@ -50,9 +49,9 @@ def main(_delay):
             environ.temperature = sense.get_temperature()
             environ.humidity = sense.get_humidity()
         else:
-            environ.pressure = get_pressure()
-            environ.temperature = get_temperature()
-            environ.humidity = get_humidity()
+            environ.pressure = get_pressure_rand()
+            environ.temperature = get_temperature_rand()
+            environ.humidity = get_humidity_rand()
 
 
         session.add(environ)
@@ -72,16 +71,42 @@ def main(_delay):
 
         sleep(_delay)
 
-def get_pressure():
+def get_pressure_rand():
     return round(gauss(40, 10),2)
 
 
-def get_humidity():
+def get_humidity_rand():
     return round(gauss(40, 10),2)
 
 
-def get_temperature():
+def get_temperature_rand():
     return round(gauss(40, 10),2)
+
+def get_last_temperature(count = 1):
+    command = "select temperature from tph_storage order by created_at desc limit " + str(count)
+    connection = sql.connect("./data/monitor_data.db")
+    csr = connection.cursor()
+    csr.execute(command)
+    rows = csr.fetchall()
+    connection.close()
+    return rows
+def get_last_humidity(count = 1):
+    command = "select humidity from tph_storage order by created_at desc limit " + str(count)
+    connection = sql.connect("./data/monitor_data.db")
+    csr = connection.cursor()
+    csr.execute(command)
+    rows = csr.fetchall()
+    connection.close()
+    return rows
+
+def get_last_pressure(count = 1):
+    command = "select pressure from tph_storage order by created_at desc limit " + str(count)
+    connection = sql.connect("./data/monitor_data.db")
+    csr = connection.cursor()
+    csr.execute(command)
+    rows = csr.fetchall()
+    connection.close()
+    return rows
 
 if __name__ == '__main__':
     delay = 5.0
