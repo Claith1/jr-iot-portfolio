@@ -4,7 +4,7 @@ from time import sleep
 # import the ORM items
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
+import sqlite3 as sql
 # import the Model classes for CPU and Storage
 from db import CPU, Storage, Base
 
@@ -62,6 +62,15 @@ def main(_delay):
 
         sleep(_delay)
 
+
+def get_load_last(count):
+    command = "select load from device_general order by created_at desc limit " + str(count)
+    connection = sql.connect("./data/monitor_data.db")
+    csr = connection.cursor()
+    csr.execute(command)
+    rows = csr.fetchall()
+    connection.close()
+    return rows
 
 if __name__ == '__main__':
     delay = 5.0
