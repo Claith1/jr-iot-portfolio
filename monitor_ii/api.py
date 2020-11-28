@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from monitor import GetLoad
+from monitor_ii.monitor_cpu import get_load_last
 from monitor_ii.monitor_enviro import get_last_temperature,get_last_humidity,get_last_pressure
 app = Flask(__name__)
 
@@ -11,7 +11,9 @@ def index():
 
 @app.route('/api/device-load')
 def DeviceLoad():
-    return ("{cpu : \"" + str(GetLoad()) + "\"}")
+    var = get_load_last(1)
+    val = list(zip(*var))[0]
+    return {"load": val}
 
 
 @app.route('/about')
