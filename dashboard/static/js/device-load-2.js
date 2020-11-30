@@ -1,23 +1,33 @@
-let url = 'http://192.168.1.14:5000/api/device-load'
-let method = 'GET'
-let typeOfResponse = 'json'
+let urlLoad = 'http://192.168.1.14:5000/api/device-load'
+let methodLoad = 'GET'
+let typeOfResponseLoad = 'json'
 
-let xhr = new XMLHttpRequest()
-xhr.open(method, url)
-xhr.responseType = typeOfResponse
-xhr.send()
-xhr.onload = function () {
-    let responseObj = xhr.response;
+let xhrLoad = new XMLHttpRequest()
+xhrLoad.open(methodLoad, urlLoad)
+xhrLoad.responseType = typeOfResponseLoad
+xhrLoad.send()
+xhrLoad.onload = function () {
+    let responseObj = xhrLoad.response;
     console.log(responseObj)
     for (let responseNumber in responseObj) {
         let response = responseObj[responseNumber]
-        var cpuLoad = response
-        var chartCanvas1 = document.getElementById('Device-Load_Pie')
+        var load = response
+        createLoad(load)
+    }
+
+};
+xhrLoad.onerror = function () {
+    alert("Request failed");
+
+}
+
+function createLoad(load) {
+var pieLoadCanvas = document.getElementById('Device-Load_Pie')
         var barData = {
             labels: ['Cpu Usage','Idle'],
             datasets: [{
                 label: 'Current',
-                data: [cpuLoad,100-cpuLoad],
+                data: [+(load),100-+(load)],
                 borderWidth: 1,
                 borderAlign: 'inner',
                 backgroundColor: [
@@ -33,16 +43,9 @@ xhr.onload = function () {
 
         var barOptions = {}
 
-        var myChart1 = new Chart(chartCanvas1, {
+        var myChart1 = new Chart(pieLoadCanvas, {
             type: 'pie',
             data: barData,
             options: barOptions,
         })
-    }
-
-};
-xhr.onerror = function () {
-    alert("Request failed");
-
-}
-
+        }

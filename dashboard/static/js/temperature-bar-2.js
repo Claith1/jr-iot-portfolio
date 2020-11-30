@@ -1,10 +1,31 @@
+let urlTemp = 'http://192.168.1.14:5000/api/temperature'
+let methodTemp = 'GET'
+let typeOfResponseTemp = 'json'
 
+let xhrTemp = new XMLHttpRequest()
+xhrTemp.open(methodTemp, urlTemp)
+xhrTemp.responseType = typeOfResponseTemp
+xhrTemp.send()
+xhrTemp.onload = function () {
+    let responseObj = xhrTemp.response;
+    console.log(responseObj)
+    for (let responseNumber in responseObj) {
+        let response = responseObj[responseNumber]
+        var temp = response
+        createTemp(temp)
+    }
 
-var chartCanvas1 = document.getElementById('Temperature-Bar')
+};
+xhrTemp.onerror = function () {
+    alert("Request failed");
+
+}
+function createTemp(temp) {
+var temperatureChartCanvas = document.getElementById('Temperature-Bar')
         var barData = {
             datasets: [{
                 label: 'Current',
-                data: [200],
+                data: [+(temp)],
                 borderWidth: 1,
                 backgroundColor: [
                     'rgba(24, 58, 55, 0.4)',
@@ -25,8 +46,9 @@ var chartCanvas1 = document.getElementById('Temperature-Bar')
             },
         }
 
-        var myChart1 = new Chart(chartCanvas1, {
+        var myChart1 = new Chart(temperatureChartCanvas, {
             type: 'bar',
             data: barData,
             options: barOptions,
         })
+        }

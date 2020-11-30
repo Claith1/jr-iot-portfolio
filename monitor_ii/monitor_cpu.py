@@ -64,7 +64,7 @@ def main(_delay):
 
 
 def get_load_last(count):
-    command = "select load from device_general order by created_at desc limit " + str(count)
+    command = "select load,created_at from device_general order by created_at desc limit " + str(count)
     connection = sql.connect("./data/monitor_data.db")
     csr = connection.cursor()
     csr.execute(command)

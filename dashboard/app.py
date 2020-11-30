@@ -10,9 +10,6 @@ def index():
 
 
 
-@app.route('/api/device-load')
-def DeviceLoad():
-    return
 
 
 @app.route('/about')

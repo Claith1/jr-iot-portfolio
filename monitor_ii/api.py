@@ -4,7 +4,7 @@ from monitor_ii.monitor_cpu import get_load_last
 from monitor_ii.monitor_enviro import get_last_temperature,get_last_humidity,get_last_pressure
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*":{"origins": "*"}})
-
+from datetime import datetime
 
 @app.route('/')
 def index():
@@ -14,8 +14,10 @@ def index():
 @app.route('/api/device-load')
 def DeviceLoad():
     var = get_load_last(1)
-    val = list(zip(*var))[0]
-    return {"load": val}
+    print(var[0][0])
+
+    date_time_obj = datetime.strptime(var[0][1], '%Y-%m-%d %H:%M:%S.%f')
+    return {"load": var[0][0], "created_at": str(date_time_obj.strftime('%H:%M:%S'))}
 
 
 @app.route('/about')
