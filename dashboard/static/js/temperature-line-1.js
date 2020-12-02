@@ -22,7 +22,7 @@ var lineDynamicUpdate = function() {
     }
 }
 
-setInterval(lineDynamicUpdate, 5000);
+setInterval(lineDynamicUpdate, 10000);
 
 var myDynamicLineChartCanvas = document.getElementById('Temp-Line-Canvas')
 var lineData = {
